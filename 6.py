@@ -17,39 +17,17 @@ class Draw:
     print(self.seq, self.date, self.numbers, self.bonus)
 
 class Results:
+  
   def __init__(self):
-    self.results = [0,0,0,0,0,0,0,0,0]
+    matchTypes = ['0','1','2','2+','3','4','5','5+','6']
+    self.results = {i: 0 for i in matchTypes}
 
   def add(self, result, n=1):
-    if result == '0':
-      self.results[0] += n
-    elif result == '1':
-      self.results[1] += n
-    elif result == '2':
-      self.results[2] += n
-    elif result == '2+':
-      self.results[3] += n
-    elif result == '3':
-      self.results[4] += n
-    elif result == '4':
-      self.results[5] += n
-    elif result == '5':
-      self.results[6] += n
-    elif result == '5+':
-      self.results[7] += n
-    elif result == '6':
-      self.results[8] += n
+    self.results[result] += n
 
   def pr(self):
-    print('0:', self.results[0])
-    print('1:', self.results[1])
-    print('2:', self.results[2])
-    print('2+:', self.results[3])
-    print('3:', self.results[4])
-    print('4:', self.results[5])
-    print('5:', self.results[6])
-    print('5+:', self.results[7])
-    print('6:', self.results[8])
+    for k, v in (self.results).items():
+      print(k, v)
 
 #
 #FUNCTIONS

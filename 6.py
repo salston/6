@@ -17,7 +17,7 @@ class Draw:
     print(self.seq, self.date, self.numbers, self.bonus)
 
 class Results:
-  
+
   def __init__(self):
     matchTypes = ['0','1','2','2+','3','4','5','5+','6']
     self.results = {i: 0 for i in matchTypes}
@@ -55,7 +55,7 @@ def winnings(picks, winners, bonus):
   matches = 0
   for n in picks:
       if (n in winners):
-        matches +=1
+        matches += 1
   if (matches == 2) or (matches == 5):
     if (bonus in picks):
       matches = str(matches) + '+'
@@ -80,10 +80,23 @@ def randomTrial(winners):
 
 def trialsRandom(winners):
   random.seed()
-  for i in range(9):
+
+  trials = 10
+  rTotals = Results()
+  
+  for i in range(trials):
+    # create trail and add it to total
     r = randomTrial(winners)
-  r.pr()
-  print(r.results)
+    for k, v in r.results.items():
+      rTotals.add(k, v)
+  # Find and print the average values
+  rAvg = Results()
+  for k, v in rTotals.results.items():
+      rAvg.add(k, v/trials)
+  print('# Trials:', trials)
+  rAvg.pr()
+  #print(rAvg.results)
+  
 
 
 #
@@ -91,7 +104,6 @@ def trialsRandom(winners):
 #
 def main():
   winners = readData('data.csv')
-  print(len(winners))
 
   trialsRandom(winners)
 

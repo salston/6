@@ -78,22 +78,21 @@ def randomTrial(winners):
     r.add(w)
   return r
 
-def trialsRandom(winners):
+def trials(winners, method, n=10):
   random.seed()
 
-  trials = 10
   rTotals = Results()
   
-  for i in range(trials):
-    # create trail and add it to total
-    r = randomTrial(winners)
+  for i in range(n):
+    # create trial and add it to total
+    r = method(winners)
     for k, v in r.results.items():
       rTotals.add(k, v)
   # Find and print the average values
   rAvg = Results()
   for k, v in rTotals.results.items():
-      rAvg.add(k, v/trials)
-  print('# Trials:', trials)
+      rAvg.add(k, v/n)
+  print('# Trials:', n)
   rAvg.pr()
   #print(rAvg.results)
   
@@ -105,7 +104,7 @@ def trialsRandom(winners):
 def main():
   winners = readData('data.csv')
 
-  trialsRandom(winners)
+  trials(winners, randomTrial)
 
 
 if __name__ == "__main__":

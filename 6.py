@@ -3,6 +3,7 @@ import random
 #
 # CLASSES
 #
+
 class Draw:
   def __init__(self, seq, date, numbers, bonus):
     self.seq = seq #i-i
@@ -32,6 +33,7 @@ class Results:
 #
 #FUNCTIONS
 #
+
 def readData(file):
   with open(file) as f:
     lines = [line.rstrip('\n') for line in f]
@@ -61,6 +63,10 @@ def winnings(picks, winners, bonus):
       matches = str(matches) + '+'
   return str(matches)
 
+#
+# Random
+#
+
 def randomDraw():
   s = list(range(1,50))
   w = random.sample(s,6)
@@ -78,6 +84,72 @@ def randomTrial(winners):
     r.add(w)
   return r
 
+#
+# Least
+#
+
+def leastPickedDraw(tallies):
+  # get a list of tallies keys revrse ordered by value
+  s = sorted(tallies, key=tallies.__getitem__, reverse=True)
+  p = []
+  for i in s[:6]:
+    p.append(i)
+  return(p)
+
+def leastPickedTrail(winners):
+  # train algorythm with first 2000
+  #     count up # times each number is picked
+  tallies = {x: 0 for x in range(1, 50)}
+  for w in winners[:1999]:
+    for n in w.numbers:
+      tallies[n] = tallies[n] +1
+
+  # Picks
+  r = Results()
+  for w in winners[2000:]:
+    p = leastPickedDraw(tallies)
+    win = winnings(p, w.numbers, w.bonus)
+    r.add(win)
+    # update tallies 
+    for n in w.numbers:
+      tallies[n] = tallies[n] +1
+  return r
+
+#
+# Most
+#
+
+def mostPickedDraw(tallies):
+  # get a list of tallies keys revrse ordered by value
+  s = sorted(tallies, key=tallies.__getitem__)
+  p = []
+  for i in s[:6]:
+    p.append(i)
+  return(p)
+
+def mostPickedTrail(winners):
+  # train algorythm with first 2000
+  #     count up # times each number is picked
+  tallies = {x: 0 for x in range(1, 50)}
+  for w in winners[:1999]:
+    for n in w.numbers:
+      tallies[n] = tallies[n] +1
+
+  # Picks
+  r = Results()
+  for w in winners[2000:]:
+    p = mostPickedDraw(tallies)
+    win = winnings(p, w.numbers, w.bonus)
+    r.add(win)
+    # update tallies 
+    for n in w.numbers:
+      tallies[n] = tallies[n] +1
+  return r
+
+#
+# General
+#
+
 def trials(winners, method, n=10):
   random.seed()
 
@@ -92,19 +164,25 @@ def trials(winners, method, n=10):
   rAvg = Results()
   for k, v in rTotals.results.items():
       rAvg.add(k, v/n)
-  print('# Trials:', n)
+  print(method.__name__, '# Trials:', n)
   rAvg.pr()
   #print(rAvg.results)
   
 
 
 #
-#MAIN
+# MAIN
 #
+
 def main():
   winners = readData('data.csv')
 
-  trials(winners, randomTrial)
+  trials(winners, randomTrial, 100)
+
+  trials(winners, leastPickedTrail, 1)
+
+  trials(winners, mostPickedTrail, 1)
+        
 
 
 if __name__ == "__main__":
